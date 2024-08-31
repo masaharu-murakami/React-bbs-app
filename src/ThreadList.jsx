@@ -1,0 +1,34 @@
+import React, { useEffect, useState} from 'react';
+
+export const ThreadList = () => {
+  const [threads, setThreads] =useState([]);
+
+  useEffect(() => {
+    const fetchThreads = async () => {
+      try {
+        const response = await fetch("https://railway.bulletinboard.techtrain.dev/threads" , { method: "GET" },);
+        const data = await response.json();
+        setThreads(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching threads:', error);
+      }
+    };
+    fetchThreads();
+  },[]);
+
+  return (
+    <div>
+      <h1>スレッド一覧</h1>
+      <ul className='threads'>
+        {threads.map(thread => (
+          <li key={thread.id}>
+            <a href={`/threads/${thread.id}`}>{thread.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+
