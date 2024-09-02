@@ -1,3 +1,5 @@
+//src/CreateThread.jsx
+
 import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,6 +23,7 @@ export const CreateThread = () => {
       // レスポンスを確認
       if (response.ok) {
         console.log("リクエスト成功:", await response.json());
+        navigate('/'); // スレッド作成後に一覧画面へリダイレクト
       } else {
         console.error("リクエスト失敗:", response.status, response.statusText);
       }
@@ -30,7 +33,7 @@ export const CreateThread = () => {
     }
   };
 
-    const handleButtonClick = () => {
+    const ReturnRouteButton = () => {
       navigate('/'); // ここで指定したパスに遷移する
     };
 
@@ -44,7 +47,7 @@ export const CreateThread = () => {
         onChange={(e) => setTitle(e.target.value)}
       />
       <button onClick={handleClick}>追加</button>
-      <button type="submit" onClick={handleButtonClick} >スレッド一覧に戻る</button>
+      <button type="submit" onClick={ReturnRouteButton} >スレッド一覧に戻る</button>
     </div>
     )
 };
