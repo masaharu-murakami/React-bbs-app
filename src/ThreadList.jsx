@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export const ThreadList = () => {
   const [threads, setThreads] =useState([]);
@@ -8,7 +8,7 @@ export const ThreadList = () => {
   useEffect(() => {
     const fetchThreads = async () => {
       try {
-        const response = await fetch(`https://railway.bulletinboard.techtrain.dev/threads?offset=30` , { method: "GET" },);
+        const response = await fetch(`https://railway.bulletinboard.techtrain.dev/threads` , { method: "GET" },);
         const data = await response.json();
         setThreads(data);
       } catch (error) {

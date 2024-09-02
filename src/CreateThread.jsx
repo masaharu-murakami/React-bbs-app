@@ -2,39 +2,49 @@ import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const CreateThread = () => {
-  const [text, setText ] = useState('');
+  const [title, setTitle ] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {e.preventDefault}
-  fetch("https://railway.bulletinboard.techtrain.dev/threads/", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      //データの形式をJSON形式に指定
-    },
-    body: JSON.stringify({text}),
-    // 送るデータをJSON形式に変換
-  })
-    .then(response => response.json())
-    .then(() => {
-      navigate(`/`);  //threads/${newThread.id}
-    })
-    .catch(error => console.error('Error creating thread:', error));
+  const handleClick = async (e) => {
+    e.preventDefault(); // デフォルトのフォーム送信動作を防止
+
+    try {
+      // 非同期にPOSTリクエストを送信
+      const response = await fetch("https://railway.bulletinboard.techtrain.dev/threads", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // データ形式をJSONに指定
+        },
+        body: JSON.stringify({title }) // データをJSON形式に変換して送信
+      });
+
+      // レスポンスを確認
+      if (response.ok) {
+        console.log("リクエスト成功:", await response.json());
+      } else {
+        console.error("リクエスト失敗:", response.status, response.statusText);
+      }
+    } catch (error) {
+      // エラーハンドリング
+      console.error("エラーが発生しました:", error);
+    }
+  };
 
     const handleButtonClick = () => {
       navigate('/'); // ここで指定したパスに遷移する
     };
 
     return (
-      <form onSubmit={handleSubmit}>
-        <input type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="スレッドタイトルを入力してください" //入力フィールドのヒントテキストを表示
-        required //入力が必須であることを指定
-        />
-        <button type="submit" >新しくスレッドを立てる</button>
-        <button type="submit" onClick={handleButtonClick} >スレッド一覧に戻る</button>
-      </form>
+
+      <div>
+      <h1>新しいスレッド作成</h1>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <button onClick={handleClick}>追加</button>
+      <button type="submit" onClick={handleButtonClick} >スレッド一覧に戻る</button>
+    </div>
     )
 };
