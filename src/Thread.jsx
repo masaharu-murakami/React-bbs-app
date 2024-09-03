@@ -11,25 +11,17 @@ export const Thread = () => {
 
   const {thread_id} = useParams();
   const [posts, setPosts] = useState([]);
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState("");
 
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`https://railway.bulletinboard.techtrain.dev/threads/${thread_id}/posts`);
-
+        const response = await fetch(`https://railway.bulletinboard.techtrain.dev/threads/${thread_id}/posts`, {method:'get'});
         const data = await response.json();
-
-          if (Array.isArray(data.posts)) {
-            setPosts(data.posts);
-          } else {
-            console.error('Unexpected data format:', data);
-            setPosts([]); // 空の配列に設定
-          }
-      } catch(error) {
-        console.error(`スレッドの取得に失敗しました`, error)
-        setPosts([]);
+        setPosts(data.posts);
+      } catch (error) {
+        console.error("投稿の取得に失敗しました", error);
       }
     };
 
@@ -42,12 +34,13 @@ export const Thread = () => {
       try {
         const response = await fetch(`https://railway.bulletinboard.techtrain.dev/threads/${thread_id}/posts`, {
           method: 'POST',
-          "id": "string",
-          "post": "string",
+          //"id": "string",
+          //"post": "string",
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ content }),
+          body: JSON.stringify({ post: content }),
+          // ({ content: content})  2024/09/03 課題：メッセージが表示されない  解決：左から上記に変更  質問；APIの仕様書によって変わるか否か
         });
 
         if (response.ok) {
@@ -74,6 +67,7 @@ export const Thread = () => {
           {posts.map(post => (
             <li key={post.id} className="p-4 bg-white rounded-lg shadow border border-gray-200">
               {post.post}
+              {/* {post.content} ← 2024/09/03 課題：メッセージが表示されない  解決：左から上記に変更 */}
             </li>
           ))}
         </ul>
